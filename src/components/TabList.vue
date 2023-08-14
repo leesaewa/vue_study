@@ -4,20 +4,22 @@
       <li
         v-for="tab in tabItem"
         :key="tab.id"
-        :class="{ active: selectBtn === 1 }"
+        :class="{ active: tab.id === isActive }"
       >
-        <button type="button">{{ tab.text }}</button>
+        <button type="button" @click="handleSelected(tab.id)">
+          {{ tab.text }}
+        </button>
       </li>
     </ul>
 
     <section class="tab-cont">
-      <div>
+      <div v-if="isActive === 1">
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea quasi qui
         labore. Neque, dolorem obcaecati. Alias, sequi corporis dignissimos
         cumque praesentium, explicabo ullam, corrupti iure quod debitis adipisci
         repellendus obcaecati?
       </div>
-      <div>
+      <div v-if="isActive === 2">
         <h2>Title</h2>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis hic
@@ -39,17 +41,41 @@ export default {
       tabItem: [
         { id: 1, text: "Tab01" },
         { id: 2, text: "Tab02" },
+        { id: 3, text: "Tab03" },
+        { id: 4, text: "Tab04" },
+        { id: 5, text: "Tab05" },
       ],
-      selectBtn: 1,
+      isActive: 1,
     };
   },
 
   methods: {
-    selected() {
-      this.selectBtn === this.selectBtn;
+    handleSelected(id) {
+      this.isActive = id;
     },
   },
 };
 </script>
 
-<style></style>
+<style>
+.tab-container {
+  border: 1px solid red;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.tab-container .tabs {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tab-container .tabs li {
+  width: 100%;
+}
+.tab-container .tabs li button {
+  border: 0;
+  width: 100%;
+}
+</style>
