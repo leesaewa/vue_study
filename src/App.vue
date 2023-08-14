@@ -1,14 +1,17 @@
 <template>
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <ModalCont msg="Welcome to Your Vue.js App" />
+  <TabList />
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import ModalCont from "./components/ModalCont.vue";
+import TabList from "./components/TabList.vue";
 
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    ModalCont,
+    TabList,
   },
 };
 </script>

@@ -16,7 +16,15 @@
           z-index: 9;
         "
       >
-        <slot> test modal text </slot>
+        <h2>modal title</h2>
+        <p>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laborum
+          natus sed quas esse excepturi. Velit vero similique tempore dolor
+          ducimus tempora perferendis minus et neque dolorum molestiae officia
+          labore ea possimus veritatis inventore, repellat ullam odit obcaecati
+          assumenda? Nobis officia a voluptatum blanditiis quia veritatis
+          temporibus excepturi asperiores omnis ratione!
+        </p>
         <button
           @click="$emit('close')"
           type="button"
