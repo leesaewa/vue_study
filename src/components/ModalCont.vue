@@ -1,7 +1,7 @@
 <template>
   <div>
     <button class="btn-open" @click="showModal = true" type="button">
-      button
+      Open Modal
     </button>
 
     <ModalView v-show="showModal" @close="showModal = false" />
