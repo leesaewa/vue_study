@@ -139,7 +139,8 @@ export default {
 };
 </script>
 
-<!-- 다른 방법
+<!-- 다른 방법이지만... 중복으로 fixed가 붙어버림...  -->
+<!-- 
 <script>
 export default {
   data() {
