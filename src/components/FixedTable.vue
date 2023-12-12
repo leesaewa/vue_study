@@ -139,6 +139,41 @@ export default {
 };
 </script>
 
+<!-- 다른 방법
+<script>
+export default {
+  data() {
+    return {
+      isFixed: false,
+    };
+  },
+  mounted() {
+    this.fixedTable = this.$refs.fixedTable;
+    this.thead = this.$el.querySelector("thead");
+
+    // Create an Intersection Observer
+    this.observer = new IntersectionObserver(this.handleIntersection, {
+      root: null, // Use the viewport as the root
+      rootMargin: "0px",
+      threshold: 1.0, // Fully visible
+    });
+
+    // Start observing the thead element
+    this.observer.observe(this.thead);
+  },
+  beforeUnmount() {
+    // Disconnect the observer when the component is unmounted
+    this.observer.disconnect();
+  },
+  methods: {
+    handleIntersection(entries) {
+      // Check if the thead is intersecting with the viewport
+      this.isFixed = entries[0].intersectionRatio < 1.0;
+    },
+  },
+};
+</script> -->
+
 <style scoped>
 .content {
   height: 500px;
