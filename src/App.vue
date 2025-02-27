@@ -1,29 +1,15 @@
 <template>
-  <ModalCont msg="Welcome to Your Vue.js App" />
-  <TabList />
-  <FixedTable />
+  <Header />
+  <router-view />
 </template>
 
 <script>
-import ModalCont from "./components/ModalCont.vue";
-import TabList from "./components/TabList.vue";
-import FixedTable from "./components/FixedTable.vue";
+import Header from "@/components/common/Header.vue";
 
 export default {
   name: "App",
   components: {
-    ModalCont,
-    TabList,
-    FixedTable,
+    Header,
   },
 };
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
-</style>

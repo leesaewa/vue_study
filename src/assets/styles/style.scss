@@ -1,0 +1,11 @@
+@use "base/_variable.scss" as *;
+
+body {
+  font-family: "Arial", sans-serif;
+  background-color: $primary-color;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+}
