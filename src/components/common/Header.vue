@@ -1,7 +1,9 @@
 <template>
-  <ul>
-    <li><router-link to="/">home</router-link></li>
-  </ul>
+  <header>
+    <ul>
+      <li><router-link to="/">home</router-link></li>
+    </ul>
+  </header>
 </template>
 
 <script>

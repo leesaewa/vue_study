@@ -1,33 +1,27 @@
 <template>
-  <ul>
-    <li v-for="(movie, i) in movies" :key="i">
-      <router-link :to="`/movie/${movie.id}`">
-        <img
-          :src="`https://image.tmdb.org/t/p/original${movie.poster_path}`"
-          alt=""
-        />
-        <h3>{{ movie.title }}</h3>
-        <p>{{ movie.overview }}</p>
-      </router-link>
-    </li>
-  </ul>
+  <MovieList :movieList="movieList" :extraName="'movie-popular'" />
 </template>
 
 <script>
 import { getPopularMovies } from "@/api/tmdb";
+import MovieList from "@/components/pages/main/MovieList.vue";
 
 export default {
-  name: "View",
+  name: "Main",
+
+  components: {
+    MovieList,
+  },
 
   data() {
     return {
-      movies: [],
+      movieList: [],
     };
   },
 
   async created() {
-    this.movies = await getPopularMovies();
-    console.log(this.movies);
+    this.movieList = await getPopularMovies();
+    console.log(this.movieList);
   },
 };
 </script>

@@ -1,0 +1,14 @@
+@use "@/assets/styles/base/_import" as *;
+
+.movie-list {
+  ul {
+    @include flex($wrap: wrap);
+
+    li {
+      border: 1px solid red;
+    }
+  }
+}
+
+.movie-popular {
+}
