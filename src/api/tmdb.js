@@ -44,11 +44,70 @@ export const getTopRated = async () => {
   }
 };
 
+// 개봉 예정작
+export const getUpComing = async () => {
+  try {
+    const response = await tmdbApi.get("/movie/upcoming");
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching upcoming movies:", error);
+    throw error;
+  }
+};
+
+// 오늘 트렌드
+export const getDayTrending = async () => {
+  try {
+    const response = await tmdbApi.get("/trending/movie/day");
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching upcoming movies:", error);
+    throw error;
+  }
+};
+// 이번 주 트렌드
+export const getWeekTrending = async () => {
+  try {
+    const response = await tmdbApi.get("/trending/movie/week");
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching upcoming movies:", error);
+    throw error;
+  }
+};
+
 // 특정 영화 상세 정보 가져오기
 export const getMovieDetails = async (movieId) => {
   try {
-    const response = await tmdbApi.get(`/movie/${movieId}`);
-    return response.data;
+    const movieResponse = await tmdbApi.get(`/movie/${movieId}`);
+    const creditsResponse = await tmdbApi.get(`/movie/${movieId}/credits`);
+
+    const cast = creditsResponse.data.cast.map((member) => ({
+      id: member.id,
+      name: member.name,
+      character: member.character,
+      profilePath: member.profile_path,
+    }));
+
+    const director = creditsResponse.data.crew.find(
+      (person) => person.job === "Director"
+    );
+
+    let directorData = null;
+    if (director) {
+      const personResponse = await tmdbApi.get(`/person/${director.id}`);
+      directorData = {
+        id: director.id,
+        name: director.name,
+        profilePath: personResponse.data.profile_path,
+      };
+    }
+
+    return {
+      ...movieResponse.data,
+      cast,
+      director: directorData,
+    };
   } catch (error) {
     console.error("Error fetching movie details:", error);
     throw error;

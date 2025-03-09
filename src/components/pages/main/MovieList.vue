@@ -112,6 +112,8 @@ export default {
         전쟁: "war",
         다큐멘터리: "documentary",
         공포: "horror",
+        역사: "history",
+        서부: "western",
       };
       return genreNameMap[genre] || "";
     },

@@ -29,12 +29,34 @@
     .movie-genre {
       @include flex($wrap: wrap, $gap: 6px);
       li {
-        background-color: #333;
+        background-color: #eee;
         border-radius: 8px;
         padding: 0 6px 2px;
+        color: #333;
 
-        &.romance {
-          background-color: pink;
+        $genreColor: (
+          drama: #ffddc1,
+          romance: #ffc1e3,
+          crime: #d1c2e0,
+          comedy: #fff5ba,
+          action: #ffb7b2,
+          thriller: #c2dfff,
+          sf: #b5ead7,
+          adventure: #ffdac1,
+          family: #ffecb3,
+          animation: #ffd1dc,
+          fantasy: #d7bde2,
+          war: #a2d2ff,
+          documentary: #c8e6c9,
+          horror: #e6c9c9,
+          history: #f5cba7,
+          western: #e0c097,
+        );
+
+        @each $value, $color in $genreColor {
+          &.#{$value} {
+            background-color: $color;
+          }
         }
       }
     }
@@ -42,4 +64,22 @@
 }
 
 .movie-popular {
+}
+
+.movie-detail-list {
+  background-size: cover;
+  background-position: center center;
+
+  .cast {
+    @include flex($wrap: wrap, $gap: 8px);
+    li {
+      border: 1px solid green;
+    }
+    span {
+      font-weight: bold;
+    }
+    img {
+      width: 100px;
+    }
+  }
 }
