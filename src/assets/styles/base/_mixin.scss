@@ -1,8 +1,8 @@
 @mixin flex(
-  $direction: row,
-  $justify: center,
-  $align: center,
-  $wrap: wrap,
+  $direction: null,
+  $justify: null,
+  $align: null,
+  $wrap: null,
   $gap: null
 ) {
   display: flex;
@@ -12,4 +12,11 @@
   flex-wrap: $wrap;
   gap: $gap;
   @content;
+}
+
+@mixin font($size: 14px, $weight: 400, $color: #333, $height: null) {
+  font-size: $size;
+  font-weight: $weight;
+  color: $color;
+  line-height: $height;
 }

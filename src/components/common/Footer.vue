@@ -1,5 +1,5 @@
 <template>
-  <footer>copyright</footer>
+  <footer>Copyright All rights reserved.</footer>
 </template>
 
 <script>

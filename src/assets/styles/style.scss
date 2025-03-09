@@ -2,7 +2,6 @@
 @use "components/movie.scss" as *;
 
 body {
-  font-family: "Arial", sans-serif;
   background-color: $primary-color;
   color: white;
 }
@@ -24,4 +23,8 @@ main {
 
 footer {
   margin: 0 auto;
+  text-align: center;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  margin-top: 20px;
 }

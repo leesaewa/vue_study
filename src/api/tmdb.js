@@ -15,9 +15,31 @@ const tmdbApi = axios.create({
 export const getPopularMovies = async () => {
   try {
     const response = await tmdbApi.get("/movie/popular");
-    return response.data.results; // 인기 영화 리스트 반환
+    return response.data.results;
   } catch (error) {
     console.error("Error fetching popular movies:", error);
+    throw error;
+  }
+};
+
+// 지금 상영중
+export const getNowPlaying = async () => {
+  try {
+    const response = await tmdbApi.get("/movie/now_playing");
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching now playing movies:", error);
+    throw error;
+  }
+};
+
+// 최고 평점
+export const getTopRated = async () => {
+  try {
+    const response = await tmdbApi.get("/movie/top_rated");
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching top rated movies:", error);
     throw error;
   }
 };
@@ -29,6 +51,20 @@ export const getMovieDetails = async (movieId) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching movie details:", error);
+    throw error;
+  }
+};
+
+// 장르
+export const getMovieGenres = async () => {
+  try {
+    const response = await tmdbApi.get("/genre/movie/list");
+    return response.data.genres.reduce((acc, genre) => {
+      acc[genre.id] = genre.name;
+      return acc;
+    }, {});
+  } catch (error) {
+    console.error("Error fetching movie genres:", error);
     throw error;
   }
 };
