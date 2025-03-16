@@ -79,9 +79,21 @@ export const getWeekTrending = async () => {
 // 특정 영화 상세 정보 가져오기
 export const getMovieDetails = async (movieId) => {
   try {
-    const movieResponse = await tmdbApi.get(`/movie/${movieId}`);
-    const creditsResponse = await tmdbApi.get(`/movie/${movieId}/credits`);
+    const [
+      movieResponse,
+      creditsResponse,
+      videoResponse,
+      // reviewsResponse,
+      similarResponse,
+    ] = await Promise.all([
+      tmdbApi.get(`/movie/${movieId}`),
+      tmdbApi.get(`/movie/${movieId}/credits`),
+      tmdbApi.get(`/movie/${movieId}/videos`),
+      // tmdbApi.get(`/movie/${movieId}/reviews`),
+      tmdbApi.get(`/movie/${movieId}/similar`),
+    ]);
 
+    // 출연진 정보 매핑
     const cast = creditsResponse.data.cast.map((member) => ({
       id: member.id,
       name: member.name,
@@ -89,24 +101,46 @@ export const getMovieDetails = async (movieId) => {
       profilePath: member.profile_path,
     }));
 
-    const director = creditsResponse.data.crew.find(
-      (person) => person.job === "Director"
-    );
-
-    let directorData = null;
-    if (director) {
-      const personResponse = await tmdbApi.get(`/person/${director.id}`);
-      directorData = {
+    // 감독 정보 추출 (배열로 만들기)
+    const directors = creditsResponse.data.crew
+      .filter((person) => person.job === "Director")
+      .map((director) => ({
         id: director.id,
         name: director.name,
-        profilePath: personResponse.data.profile_path,
-      };
-    }
+        profilePath: director.profile_path,
+      }));
+
+    // 트레일러 찾기
+    const trailer = videoResponse.data.results.find(
+      (video) => video.site === "YouTube" && video.type === "Trailer"
+    );
+
+    // 리뷰 정보 추출
+    // const reviews = reviewsResponse.data.results.map((review) => ({
+    //   author: review.author,
+    //   content: review.content,
+    //   rating: review.author_details.rating || null,
+    // }));
+    // console.log("리뷰데이터", reviews);
+
+    // 비슷한 영화 목록 추출
+    const similarMovies = similarResponse.data.results.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      posterPath: movie.poster_path,
+    }));
+
+    // rating
+    const rating = movieResponse.data.vote_average;
 
     return {
       ...movieResponse.data,
       cast,
-      director: directorData,
+      director: directors.length > 0 ? directors[0] : null,
+      videoKey: trailer ? trailer.key : null,
+      // reviews,
+      similarMovies,
+      rating,
     };
   } catch (error) {
     console.error("Error fetching movie details:", error);

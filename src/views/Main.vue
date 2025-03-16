@@ -1,34 +1,36 @@
 <template>
-  <MovieList
-    :movieTitle="'Popular'"
-    :movieList="movieList"
-    :extraName="'movie-popular'"
-  />
-  <MovieList
-    :movieTitle="'지금 상영중'"
-    :movieList="nowPlaying"
-    :extraName="'movie-popular'"
-  />
-  <MovieList
-    :movieTitle="'최고 평점'"
-    :movieList="topLated"
-    :extraName="'movie-popular'"
-  />
-  <MovieList
-    :movieTitle="'개봉 예정작'"
-    :movieList="upComing"
-    :extraName="'movie-popular'"
-  />
-  <MovieList
-    :movieTitle="'오늘 인기있는 영화'"
-    :movieList="dayTrend"
-    :extraName="'movie-popular'"
-  />
-  <MovieList
-    :movieTitle="'이번주 인기있는 영화'"
-    :movieList="weekTrend"
-    :extraName="'movie-popular'"
-  />
+  <main>
+    <MovieList
+      :movieTitle="'Popular'"
+      :movieList="movieList"
+      :extraName="'movie-popular'"
+    />
+    <MovieList
+      :movieTitle="'지금 상영중'"
+      :movieList="nowPlaying"
+      :extraName="'movie-popular'"
+    />
+    <MovieList
+      :movieTitle="'최고 평점'"
+      :movieList="topLated"
+      :extraName="'movie-popular'"
+    />
+    <MovieList
+      :movieTitle="'개봉 예정작'"
+      :movieList="upComing"
+      :extraName="'movie-popular'"
+    />
+    <MovieList
+      :movieTitle="'오늘 인기있는 영화'"
+      :movieList="dayTrend"
+      :extraName="'movie-popular'"
+    />
+    <MovieList
+      :movieTitle="'이번주 인기있는 영화'"
+      :movieList="weekTrend"
+      :extraName="'movie-popular'"
+    />
+  </main>
 </template>
 
 <script>
