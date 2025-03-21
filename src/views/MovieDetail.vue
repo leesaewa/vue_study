@@ -20,38 +20,17 @@
           />
         </div>
         <div class="overview-desc">
-          <h3>{{ movie.title }}</h3>
-          <p>영화 ID: {{ route.params.id }}</p>
-          <p>{{ movie.rating }}</p>
-          <p>
-            runtime: {{ handleRuntime(movie.runtime) }} ({{ movie.runtime }}분)
-          </p>
-          <p>
-            장르:
-            <span v-if="movie.genres">
-              {{ movie.genres.map((g) => g.name).join(", ") }}
-            </span>
-            <span v-else-if="movie.genre_ids">
-              {{ movie.genre_ids.map((id) => genres[id]).join(", ") }}
-            </span>
-          </p>
-
-          <p>감독 : {{ movie.director?.name }}</p>
-          <img
-            v-if="movie.director && movie.director.profilePath"
-            :src="
-              movie.director && movie.director.profilePath
-                ? `https://image.tmdb.org/t/p/w500${movie.director.profilePath}`
-                : require('@/assets/images/no-image.gif')
-            "
-            alt="감독 사진"
-          />
-
-          <Cast v-if="movie.cast" :cast="movie.cast" />
+          <MovieInfo :movie="movie" :genres="genres" />
+          <div class="overview-flex">
+            <DetailInfo :director="movie.director" :movie="movie" />
+            <Cast v-if="movie.cast" :cast="movie.cast" />
+          </div>
+          <div>
+            <h3>Storyline</h3>
+            {{ movie.overview }}
+          </div>
         </div>
       </div>
-
-      {{ movie.overview }}
 
       <Trailer v-if="movie.videoKey" :videoKey="movie.videoKey" />
       <SimilarList :similarList="movie.similarMovies" />
@@ -68,11 +47,13 @@ import Title from "@/components/pages/detail/Title.vue";
 import Cast from "@/components/pages/detail/Cast.vue";
 import Trailer from "@/components/pages/detail/Trailer.vue";
 import SimilarList from "@/components/pages/detail/SimilarList.vue";
+import MovieInfo from "@/components/pages/detail/MovieInfo.vue";
+import DetailInfo from "@/components/pages/detail/DetailInfo.vue";
 
 export default {
   name: "MovieDetail",
 
-  components: { Title, Cast, Trailer, SimilarList },
+  components: { Title, Cast, Trailer, SimilarList, MovieInfo, DetailInfo },
 
   setup() {
     const route = useRoute();
@@ -99,12 +80,6 @@ export default {
     return { route, movie, genres, rating };
   },
 
-  methods: {
-    handleRuntime(runtime) {
-      const hours = Math.floor(runtime / 60); // 시간을 계산 (124 ÷ 60 = 2시간)
-      const minutes = runtime % 60; // 나머지 분을 계산 (124 % 60 = 4분)
-      return `${hours}시간 ${minutes}분`;
-    },
-  },
+  methods: {},
 };
 </script>

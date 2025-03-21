@@ -107,7 +107,7 @@
     border: 1px solid #ddd;
     position: relative;
     width: 90%;
-    margin: -300px auto;
+    margin: -300px auto 0;
 
     z-index: 2;
 
@@ -142,6 +142,13 @@
           border-radius: 10px;
           overflow: hidden;
         }
+
+        .overview-flex {
+          @include flex($gap: 10px);
+          > div {
+            flex: 1;
+          }
+        }
       }
     }
     .similar-list {
@@ -163,16 +170,24 @@
     }
   }
 
-  .cast {
-    @include flex($wrap: wrap, $gap: 8px);
-    li {
-      border: 1px solid green;
-    }
-    span {
-      font-weight: bold;
-    }
-    img {
-      width: 100px;
+  .cast-wrapper {
+    .cast-list {
+      @include flex($direction: column, $gap: 8px);
+      li {
+        border: 1px solid green;
+        @include flex($align: center, $gap: 8px);
+      }
+      span {
+        strong {
+          display: block;
+        }
+      }
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
     }
   }
 }
