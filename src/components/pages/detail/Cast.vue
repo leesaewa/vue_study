@@ -1,5 +1,6 @@
 <template>
   <div class="cast-wrapper">
+    <h4 class="ttl">Cast</h4>
     <ul v-if="cast.length > 0" class="cast-list">
       <li v-for="(item, castIndex) in displayedCast" :key="castIndex">
         <img

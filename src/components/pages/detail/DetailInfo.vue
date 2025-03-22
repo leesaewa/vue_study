@@ -1,5 +1,6 @@
 <template>
   <div class="detail-info">
+    <h4 class="ttl">Details</h4>
     <dl v-for="(item, index) in infoList" :key="index" class="info-item">
       <dt>{{ item.label }}</dt>
       <dd>{{ item.content }}</dd>
@@ -55,10 +56,6 @@ export default {
 </script>
 
 <style scoped>
-.detail-info {
-  margin: 1rem 0;
-}
-
 .info-item {
   display: flex;
   align-items: center;

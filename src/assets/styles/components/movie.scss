@@ -80,6 +80,13 @@
     z-index: 1;
   }
 
+  .ttl {
+    @include font(24px, bold);
+    border-bottom: 1px solid #818181;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+  }
+
   .movie-backdrop {
     position: relative;
     width: 100%;

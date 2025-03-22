@@ -26,13 +26,14 @@
             <Cast v-if="movie.cast" :cast="movie.cast" />
           </div>
           <div>
-            <h3>Storyline</h3>
+            <h4 class="ttl">Storyline</h4>
             {{ movie.overview }}
+
+            <Trailer v-if="movie.videoKey" :videoKey="movie.videoKey" />
           </div>
         </div>
       </div>
 
-      <Trailer v-if="movie.videoKey" :videoKey="movie.videoKey" />
       <SimilarList :similarList="movie.similarMovies" />
     </div>
   </main>
@@ -40,7 +41,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { getMovieDetails, getMovieGenres } from "@/api/tmdb";
 import Title from "@/components/pages/detail/Title.vue";
@@ -61,25 +62,33 @@ export default {
     const genres = ref({});
     const rating = ref(null);
 
-    onMounted(async () => {
+    const fetchMovieData = async (id) => {
       try {
-        const movieData = await getMovieDetails(route.params.id);
+        const movieData = await getMovieDetails(id);
         movieData.similarMovies = movieData.similarMovies || [];
-
         movie.value = movieData;
-        console.log(movieData);
         rating.value = movieData.rating;
-
-        const genreMap = await getMovieGenres();
-        genres.value = genreMap;
+        console.log(movieData);
       } catch (error) {
         console.error("영화 정보를 불러오는 중 오류 발생:", error);
       }
+    };
+
+    onMounted(async () => {
+      await fetchMovieData(route.params.id);
+      const genreMap = await getMovieGenres();
+      genres.value = genreMap;
     });
+
+    watch(
+      () => route.params.id,
+      async (newId) => {
+        movie.value = null; // 로딩 상태 표시
+        await fetchMovieData(newId);
+      }
+    );
 
     return { route, movie, genres, rating };
   },
-
-  methods: {},
 };
 </script>

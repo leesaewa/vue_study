@@ -1,17 +1,19 @@
 <template>
   <div class="similar-list">
-    <h2>similar</h2>
+    <h4 class="ttl">Similar Movies</h4>
     <ul>
       <li v-for="(item, itemIndex) in similarList" :key="itemIndex">
-        {{ item.title }}
-        <img
-          :src="
-            item.posterPath
-              ? `https://image.tmdb.org/t/p/original${item.posterPath}`
-              : require('@/assets/images/no-image.gif')
-          "
-          alt=""
-        />
+        <router-link :to="`/movie/${item.id}`">
+          <img
+            :src="
+              item.posterPath
+                ? `https://image.tmdb.org/t/p/original${item.posterPath}`
+                : require('@/assets/images/no-image.gif')
+            "
+            alt=""
+          />
+          {{ item.title }}
+        </router-link>
       </li>
     </ul>
     <button>더 보기</button>

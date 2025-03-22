@@ -52,20 +52,10 @@
 
 <script>
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/autoplay";
 import { getMovieGenres } from "@/api/tmdb";
 
 export default {
   name: "MovieList",
-
-  components: {
-    Swiper,
-    SwiperSlide,
-  },
 
   props: {
     movieTitle: {
