@@ -20,9 +20,8 @@
           />
         </div>
         <div class="overview-desc">
-          <MovieInfo :movie="movie" :genres="genres" />
           <div class="overview-flex">
-            <DetailInfo :director="movie.director" :movie="movie" />
+            <DetailInfo :movie="movie" :crew="movie.crew" :genres="genres" />
             <Cast v-if="movie.cast" :cast="movie.cast" />
           </div>
           <div>
@@ -48,13 +47,12 @@ import Title from "@/components/pages/detail/Title.vue";
 import Cast from "@/components/pages/detail/Cast.vue";
 import Trailer from "@/components/pages/detail/Trailer.vue";
 import SimilarList from "@/components/pages/detail/SimilarList.vue";
-import MovieInfo from "@/components/pages/detail/MovieInfo.vue";
 import DetailInfo from "@/components/pages/detail/DetailInfo.vue";
 
 export default {
   name: "MovieDetail",
 
-  components: { Title, Cast, Trailer, SimilarList, MovieInfo, DetailInfo },
+  components: { Title, Cast, Trailer, SimilarList, DetailInfo },
 
   setup() {
     const route = useRoute();

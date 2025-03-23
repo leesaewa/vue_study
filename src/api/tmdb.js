@@ -79,19 +79,13 @@ export const getWeekTrending = async () => {
 // 특정 영화 상세 정보 가져오기
 export const getMovieDetails = async (movieId) => {
   try {
-    const [
-      movieResponse,
-      creditsResponse,
-      videoResponse,
-      // reviewsResponse,
-      similarResponse,
-    ] = await Promise.all([
-      tmdbApi.get(`/movie/${movieId}`),
-      tmdbApi.get(`/movie/${movieId}/credits`),
-      tmdbApi.get(`/movie/${movieId}/videos`),
-      // tmdbApi.get(`/movie/${movieId}/reviews`),
-      tmdbApi.get(`/movie/${movieId}/similar`),
-    ]);
+    const [movieResponse, creditsResponse, videoResponse, similarResponse] =
+      await Promise.all([
+        tmdbApi.get(`/movie/${movieId}`),
+        tmdbApi.get(`/movie/${movieId}/credits`),
+        tmdbApi.get(`/movie/${movieId}/videos`),
+        tmdbApi.get(`/movie/${movieId}/similar`),
+      ]);
 
     // 출연진 정보 매핑
     const cast = creditsResponse.data.cast.map((member) => ({
@@ -101,27 +95,30 @@ export const getMovieDetails = async (movieId) => {
       profilePath: member.profile_path,
     }));
 
-    // 감독 정보 추출 (배열로 만들기)
-    const directors = creditsResponse.data.crew
-      .filter((person) => person.job === "Director")
-      .map((director) => ({
-        id: director.id,
-        name: director.name,
-        profilePath: director.profile_path,
+    // 주요 크루 필터링 (감독, 작가, 촬영 감독, 작곡가)
+    const importantJobs = [
+      "Director", // 감독
+      "Screenplay",
+      "Writer", // 작가
+      "Director of Photography", // 촬영 감독
+      "Original Music Composer",
+      "Composer", // 작곡가
+    ];
+
+    const crew = creditsResponse.data.crew
+      .filter((person) => importantJobs.includes(person.job))
+      .filter((person) => person.profile_path)
+      .map((person) => ({
+        id: person.id,
+        name: person.name,
+        job: person.job,
+        profilePath: person.profile_path,
       }));
 
     // 트레일러 찾기
     const trailer = videoResponse.data.results.find(
       (video) => video.site === "YouTube" && video.type === "Trailer"
     );
-
-    // 리뷰 정보 추출
-    // const reviews = reviewsResponse.data.results.map((review) => ({
-    //   author: review.author,
-    //   content: review.content,
-    //   rating: review.author_details.rating || null,
-    // }));
-    // console.log("리뷰데이터", reviews);
 
     // 비슷한 영화 목록 추출
     const similarMovies = similarResponse.data.results.map((movie) => ({
@@ -136,9 +133,8 @@ export const getMovieDetails = async (movieId) => {
     return {
       ...movieResponse.data,
       cast,
-      director: directors.length > 0 ? directors[0] : null,
+      crew,
       videoKey: trailer ? trailer.key : null,
-      // reviews,
       similarMovies,
       rating,
     };

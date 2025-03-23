@@ -80,13 +80,6 @@
     z-index: 1;
   }
 
-  .ttl {
-    @include font(24px, bold);
-    border-bottom: 1px solid #818181;
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-  }
-
   .movie-backdrop {
     position: relative;
     width: 100%;
@@ -146,8 +139,9 @@
         border: 1px solid blue;
 
         &.overview-poster {
-          border-radius: 10px;
-          overflow: hidden;
+          img {
+            border-radius: 10px;
+          }
         }
 
         .overview-flex {
@@ -155,6 +149,49 @@
           > div {
             flex: 1;
           }
+        }
+      }
+
+      .credits-list {
+        border: 1px solid green;
+        @include flex($align: center, $gap: 8px);
+        width: 100%;
+        margin-bottom: 8px;
+
+        .cast-image {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        span {
+          strong {
+            display: block;
+          }
+        }
+      }
+
+      .ttl {
+        @include font(24px, bold);
+        border-bottom: 1px solid #818181;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+
+        dt {
+          font-weight: bold;
+          min-width: 80px;
+        }
+
+        dd {
+          margin: 0;
         }
       }
     }
@@ -178,22 +215,19 @@
   }
 
   .cast-wrapper {
-    .cast-list {
-      @include flex($direction: column, $gap: 8px);
-      li {
-        border: 1px solid green;
-        @include flex($align: center, $gap: 8px);
-      }
-      span {
-        strong {
-          display: block;
-        }
-      }
-      img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
+    position: relative;
+
+    .more-button {
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+      padding: 10px 0;
+      border-top: 1px solid #818181;
+      border-bottom: 1px solid #818181;
+      @include font(16px, #818181, bold);
+
+      &:hover {
+        border-color: #e0e0e0;
       }
     }
   }

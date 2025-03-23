@@ -1,8 +1,12 @@
 <template>
   <div class="cast-wrapper">
     <h4 class="ttl">Cast</h4>
-    <ul v-if="cast.length > 0" class="cast-list">
-      <li v-for="(item, castIndex) in displayedCast" :key="castIndex">
+    <ul v-if="cast.length > 0">
+      <li
+        v-for="(item, castIndex) in displayedCast"
+        :key="castIndex"
+        class="credits-list"
+      >
         <img
           :src="
             item.profilePath
@@ -10,6 +14,7 @@
               : require('@/assets/images/no-image.gif')
           "
           alt=""
+          class="cast-image"
         />
         <span>
           <strong>{{ item.character }}</strong>
@@ -17,21 +22,23 @@
         </span>
       </li>
     </ul>
-    <button
-      v-if="cast.length > 5"
-      @click="showAll = !showAll"
-      class="more-button"
-    >
-      {{ showAll ? "접기" : "더보기" }}
-    </button>
+    <MoreButton
+      :hasMoreItems="hasMoreItems"
+      :isAllVisible="isAllVisible"
+      @showMoreItems="showMoreItems"
+    />
   </div>
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import MoreButton from "@/components/common/MoreButton.vue";
 
 export default {
   name: "Cast",
+
+  components: {
+    MoreButton,
+  },
 
   props: {
     cast: {
@@ -40,37 +47,38 @@ export default {
     },
   },
 
-  setup(props) {
-    const showAll = ref(false);
-
-    const displayedCast = computed(() => {
-      return showAll.value ? props.cast : props.cast.slice(0, 5);
-    });
-
+  data() {
     return {
-      showAll,
-      displayedCast,
+      visibleCount: 7,
+      itemsPerPage: 5,
     };
+  },
+
+  computed: {
+    displayedCast() {
+      return this.cast.slice(0, this.visibleCount);
+    },
+    hasMoreItems() {
+      return this.cast.length > 5;
+    },
+    isAllVisible() {
+      return this.visibleCount >= this.cast.length;
+    },
+  },
+
+  methods: {
+    showMoreItems() {
+      if (this.isAllVisible) {
+        // 접기 버튼을 눌렀을 때
+        this.visibleCount = this.itemsPerPage;
+      } else {
+        // 더보기 버튼을 눌렀을 때
+        this.visibleCount = Math.min(
+          this.visibleCount + this.itemsPerPage,
+          this.cast.length
+        );
+      }
+    },
   },
 };
 </script>
-
-<style scoped>
-.cast-wrapper {
-  position: relative;
-}
-
-.more-button {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.more-button:hover {
-  background-color: #e0e0e0;
-}
-</style>
