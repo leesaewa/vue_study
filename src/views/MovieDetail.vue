@@ -4,35 +4,9 @@
       class="movie-backdrop"
       :style="`background-image:url('https://image.tmdb.org/t/p/original${movie.backdrop_path}')`"
     ></div>
-    <div class="movie-caption">
+    <div class="movie-contents">
       <Title :summary="movie" />
-
-      <div class="overview">
-        <div class="overview-poster">
-          <img
-            v-if="movie.poster_path"
-            :src="
-              movie.poster_path
-                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                : require('@/assets/images/no-image.gif')
-            "
-            alt=""
-          />
-        </div>
-        <div class="overview-desc">
-          <div class="overview-flex">
-            <DetailInfo :movie="movie" :crew="movie.crew" :genres="genres" />
-            <Cast v-if="movie.cast" :cast="movie.cast" />
-          </div>
-          <div>
-            <h4 class="ttl">Storyline</h4>
-            {{ movie.overview }}
-
-            <Trailer v-if="movie.videoKey" :videoKey="movie.videoKey" />
-          </div>
-        </div>
-      </div>
-
+      <Overview :movie="movie" />
       <SimilarList :similarList="movie.similarMovies" />
     </div>
   </main>
@@ -44,15 +18,13 @@ import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { getMovieDetails, getMovieGenres } from "@/api/tmdb";
 import Title from "@/components/pages/detail/Title.vue";
-import Cast from "@/components/pages/detail/Cast.vue";
-import Trailer from "@/components/pages/detail/Trailer.vue";
+import Overview from "@/components/pages/detail/Overview.vue";
 import SimilarList from "@/components/pages/detail/SimilarList.vue";
-import DetailInfo from "@/components/pages/detail/DetailInfo.vue";
 
 export default {
   name: "MovieDetail",
 
-  components: { Title, Cast, Trailer, SimilarList, DetailInfo },
+  components: { Title, Overview, SimilarList },
 
   setup() {
     const route = useRoute();

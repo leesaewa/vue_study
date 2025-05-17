@@ -33,16 +33,8 @@
             alt=""
           />
           <h3>{{ movie.title }}</h3>
-          <span> {{ movie.release_date }}</span>
-          <ul class="movie-genre">
-            <li
-              v-for="(genre, genreIndex) in mapGenres(movie.genre_ids)"
-              :key="genreIndex"
-              :class="getGenreName(genre)"
-            >
-              {{ genre }}
-            </li>
-          </ul>
+          <span>{{ movie.release_date }}</span>
+          <GenreList :movie="movie" :genres="genreMap" :isList="true" />
           <p>{{ movie.overview }}</p>
         </router-link>
       </swiper-slide>
@@ -52,11 +44,21 @@
 
 <script>
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
 import { getMovieGenres } from "@/api/tmdb";
+import GenreList from "@/components/common/GenreList.vue";
 
 export default {
   name: "MovieList",
-
+  components: {
+    GenreList,
+    Swiper,
+    SwiperSlide,
+  },
   props: {
     movieTitle: {
       type: String,

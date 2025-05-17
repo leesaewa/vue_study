@@ -1,0 +1,18 @@
+export const GENRE_CLASS_MAP = {
+  드라마: "drama",
+  로맨스: "romance",
+  범죄: "crime",
+  코미디: "comedy",
+  액션: "action",
+  스릴러: "thriller",
+  SF: "sf",
+  모험: "adventure",
+  가족: "family",
+  애니메이션: "animation",
+  판타지: "fantasy",
+  전쟁: "war",
+  다큐멘터리: "documentary",
+  공포: "horror",
+  역사: "history",
+  서부: "western",
+};

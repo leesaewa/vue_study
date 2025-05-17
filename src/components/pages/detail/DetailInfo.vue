@@ -1,7 +1,11 @@
 <template>
-  <div class="detail-info">
+  <div>
     <h4 class="ttl">Details</h4>
-    <dl v-for="(item, index) in infoList" :key="index" class="info-item">
+    <dl
+      v-for="(item, itemIndex) in infoList"
+      :key="itemIndex"
+      class="detail-info"
+    >
       <template v-if="item.type === 'crew'">
         <dd class="credits-list">
           <img
@@ -25,8 +29,13 @@
       <template v-else>
         <dt>{{ item.label }}</dt>
         <dd>
-          {{ item.content ? item.content : "정보가 없습니다." }}
-          <b v-if="item.runtime">({{ item.runtime }}분)</b>
+          <template v-if="item.component">
+            <GenreList :movie="movie" :genres="genres" />
+          </template>
+          <template v-else>
+            {{ item.content ? item.content : "정보가 없습니다." }}
+            <b v-if="item.runtime">({{ item.runtime }}분)</b>
+          </template>
         </dd>
       </template>
     </dl>
@@ -34,8 +43,13 @@
 </template>
 
 <script>
+import GenreList from "@/components/common/GenreList.vue";
+
 export default {
   name: "DetailInfo",
+  components: {
+    GenreList,
+  },
   props: {
     movie: {
       type: Object,
@@ -85,8 +99,8 @@ export default {
         },
         {
           label: "장르",
-          content: this.getGenres(),
           type: "movie",
+          component: true,
         },
       ];
       const crewInfo = this.crew.map((member) => ({
@@ -105,14 +119,6 @@ export default {
       const hours = Math.floor(runtime / 60);
       const minutes = runtime % 60;
       return `${hours}시간 ${minutes}분`;
-    },
-    getGenres() {
-      if (this.movie.genres) {
-        return this.movie.genres.map((g) => g.name).join(", ");
-      } else if (this.movie.genre_ids) {
-        return this.movie.genre_ids.map((id) => this.genres[id]).join(", ");
-      }
-      return "정보가 없습니다.";
     },
   },
 };

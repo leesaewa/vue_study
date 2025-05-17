@@ -125,6 +125,7 @@ export const getMovieDetails = async (movieId) => {
       id: movie.id,
       title: movie.title,
       posterPath: movie.poster_path,
+      release_date: movie.release_date,
     }));
 
     // rating

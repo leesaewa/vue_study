@@ -4,21 +4,27 @@
     <ul>
       <li v-for="(item, itemIndex) in displayedSimilarList" :key="itemIndex">
         <router-link :to="`/movie/${item.id}`">
-          <img
-            :src="
-              item.posterPath
-                ? `https://image.tmdb.org/t/p/original${item.posterPath}`
-                : require('@/assets/images/no-image.gif')
-            "
-            alt=""
-          />
-          {{ item.title }}
+          <figure>
+            <img
+              :src="
+                item.posterPath
+                  ? `https://image.tmdb.org/t/p/original${item.posterPath}`
+                  : require('@/assets/images/no-image.gif')
+              "
+              alt=""
+            />
+            <figcaption>
+              <h5>{{ item.title }}</h5>
+              <div>
+                <span>{{ item.title }}</span>
+                <span>{{ item.release_date }}</span>
+                <button type="button">more view</button>
+              </div>
+            </figcaption>
+          </figure>
         </router-link>
       </li>
     </ul>
-    <!-- <button v-if="hasMoreItems" @click="showMoreItems" class="more-button">
-      {{ isAllVisible ? "접기" : "더보기" }}
-    </button> -->
 
     <MoreButton
       :hasMoreItems="hasMoreItems"
@@ -67,10 +73,8 @@ export default {
   methods: {
     showMoreItems() {
       if (this.isAllVisible) {
-        // 접기 버튼을 눌렀을 때
         this.visibleCount = this.itemsPerPage;
       } else {
-        // 더보기 버튼을 눌렀을 때
         this.visibleCount = Math.min(
           this.visibleCount + this.itemsPerPage,
           this.similarList.length
