@@ -1,5 +1,6 @@
 <template>
   <main>
+    <MainSlider />
     <MovieList
       :movieTitle="'Popular'"
       :movieList="movieList"
@@ -42,12 +43,14 @@ import {
   getDayTrending,
   getWeekTrending,
 } from "@/api/tmdb";
+import MainSlider from "@/components/pages/main/MainSlider.vue";
 import MovieList from "@/components/pages/main/MovieList.vue";
 
 export default {
   name: "Main",
 
   components: {
+    MainSlider,
     MovieList,
   },
 

@@ -32,6 +32,16 @@ export const getNowPlaying = async () => {
     throw error;
   }
 };
+// 지금 상영중인 TV 시리즈
+export const getNowPlayingTv = async () => {
+  try {
+    const response = await tmdbApi.get("/tv/on_the_air");
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching now playing tv:", error);
+    throw error;
+  }
+};
 
 // 최고 평점
 export const getTopRated = async () => {

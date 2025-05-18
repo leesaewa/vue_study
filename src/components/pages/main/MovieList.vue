@@ -44,11 +44,6 @@
 
 <script>
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/autoplay";
 import { getMovieGenres } from "@/api/tmdb";
 import GenreList from "@/components/common/GenreList.vue";
 
@@ -56,8 +51,6 @@ export default {
   name: "MovieList",
   components: {
     GenreList,
-    Swiper,
-    SwiperSlide,
   },
   props: {
     movieTitle: {
@@ -85,34 +78,6 @@ export default {
     getMovieGenres().then((data) => {
       this.genreMap = data;
     });
-  },
-
-  methods: {
-    getGenreName(genre) {
-      const genreNameMap = {
-        드라마: "drama",
-        로맨스: "romance",
-        범죄: "crime",
-        코미디: "comedy",
-        액션: "action",
-        스릴러: "thriller",
-        SF: "sf",
-        모험: "adventure",
-        가족: "family",
-        애니메이션: "animation",
-        판타지: "fantasy",
-        전쟁: "war",
-        다큐멘터리: "documentary",
-        공포: "horror",
-        역사: "history",
-        서부: "western",
-      };
-      return genreNameMap[genre] || "";
-    },
-
-    mapGenres(genreIds) {
-      return genreIds.map((id) => this.genreMap[id]).filter(Boolean);
-    },
   },
 };
 </script>
