@@ -8,9 +8,9 @@
       effect="fade"
       :fade-effect="{ crossFade: true }"
       class="main-swiper"
-      :autoplay="{ delay: 5000, disableOnInteraction: false }"
       @swiper="setMainSwiper"
     >
+      <!--  :autoplay="{ delay: 5000, disableOnInteraction: false }" -->
       <swiper-slide
         v-for="(item, itemIndex) in filteredMovies"
         :key="itemIndex"
@@ -52,13 +52,15 @@
               >
             </div>
 
-            <Button
-              v-for="(btn, btnIndex) in btnList"
-              :key="btnIndex"
-              :text="btn.text"
-              :class="btn.className"
-              @click="moveDetail(item.id)"
-            />
+            <div class="btn-wrap">
+              <Button
+                v-for="(btn, btnIndex) in btnList"
+                :key="btnIndex"
+                :text="btn.text"
+                :class="btn.className"
+                @click="moveDetail(item.id)"
+              />
+            </div>
           </div>
         </div>
       </swiper-slide>
@@ -69,7 +71,6 @@
         ref="thumbsRef"
         :modules="modules"
         :slides-per-view="3"
-        :space-between="20"
         :watch-slides-progress="true"
         :centered-slides="true"
         :navigation="true"
@@ -261,40 +262,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.main-slider-wrap {
-  position: relative;
-}
-
-.thumbs-swiper {
-  position: relative;
-}
-
-/* 네비게이션 버튼 스타일 */
-:deep(.swiper-button-next),
-:deep(.swiper-button-prev) {
-  color: white;
-  background: rgba(0, 0, 0, 0.5);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-:deep(.swiper-button-next:after),
-:deep(.swiper-button-prev:after) {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-:deep(.swiper-button-next) {
-  right: 10px;
-}
-
-:deep(.swiper-button-prev) {
-  left: 10px;
-}
-</style>

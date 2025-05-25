@@ -1,7 +1,6 @@
 <template>
   <button :type="type" class="btn-basic">
     <template v-if="text">{{ text }}</template>
-    <template></template>
   </button>
 </template>
 
