@@ -10,50 +10,30 @@
         :movieList="currentMovieData"
         :extraName="'movie-popular'"
       />
+    </div>
 
-      <div class="genre-sections">
-        <GenreFilter
-          :genres="genreMap"
-          :selected-genres="selectedGenreIds"
-          @update:selected-genres="updateSelectedGenres"
-        />
-        <div v-if="selectedGenreIds.length > 0" class="filtered-movies">
-          <h2 class="filtered-title">{{ getFilteredTitle() }} 영화</h2>
-          <div class="movie-grid">
-            <div
-              v-for="movie in filteredMovies"
-              :key="movie.id"
-              class="movie-card"
-              @click="moveDetail(movie.id)"
-            >
-              <div class="poster-wrap">
-                <img
-                  :src="`https://image.tmdb.org/t/p/w300${movie.poster_path}`"
-                  :alt="movie.title"
-                  class="movie-poster"
-                />
-                <div class="movie-info">
-                  <h3 class="movie-title">{{ movie.title }}</h3>
-                  <GenreList
-                    :genres="genreMap"
-                    :movie="movie"
-                    :is-list="true"
-                    class="movie-genres"
-                  />
-                  <div class="movie-meta">
-                    <span class="release-date">{{
-                      formatDate(movie.release_date)
-                    }}</span>
-                    <div class="rating">
-                      <span class="rating-value">{{
-                        Math.floor(movie.vote_average * 10) / 10
-                      }}</span>
-                      <span class="rating-icon">★</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <!-- collection -->
+    <div class="collection-section">
+      <h2>인기 컬렉션</h2>
+      <div class="collection-grid" v-if="collections.length > 0">
+        <div
+          v-for="collection in collections"
+          :key="collection.id"
+          class="collection-card"
+          @click="goToCollectionDetail(collection.id)"
+        >
+          <div class="collection-poster">
+            <img
+              :src="`https://image.tmdb.org/t/p/w500${collection.backdrop_path}`"
+              :alt="collection.name"
+            />
+          </div>
+          <div class="collection-info">
+            <h3>{{ collection.name }}</h3>
+            <p class="movie-count">
+              {{ collection.parts ? collection.parts.length : 0 }}개의 영화
+            </p>
+            <p class="collection-overview">{{ collection.overview }}</p>
           </div>
         </div>
       </div>
@@ -69,12 +49,11 @@ import {
   getDayTrending,
   getWeekTrending,
   getMovieGenres,
+  getCollection,
 } from "@/api/tmdb";
 import Tab from "@/components/common/Tab.vue";
 import MainSlider from "@/components/pages/main/MainSlider.vue";
 import MovieList from "@/components/pages/main/MovieList.vue";
-import GenreList from "@/components/common/GenreList.vue";
-import GenreFilter from "@/components/pages/main/GenreFilter.vue";
 
 export default {
   name: "Main",
@@ -83,8 +62,6 @@ export default {
     Tab,
     MainSlider,
     MovieList,
-    GenreList,
-    GenreFilter,
   },
 
   data() {
@@ -97,13 +74,25 @@ export default {
         { text: "이번주인기있는영화", id: "weekTrend" },
       ],
       nowPlaying: [],
-      topLated: [],
+      topRated: [],
       upComing: [],
       dayTrend: [],
       weekTrend: [],
+      collections: [],
       genreMap: {},
-      selectedGenreIds: [],
       currentTab: "nowPlaying",
+      // 유명 컬렉션 ID 목록
+      collectionIds: [
+        1241, // 해리 포터
+        86311, // 어벤져스
+        295, // 파이러츠 오브 캐리비안
+        119, // 반지의 제왕
+        10, // 스타워즈
+        645, // 제임스 본드
+        87359, // 미션 임파서블
+        10194, // 토이 스토리
+        328, // 쥬라기 공원
+      ],
     };
   },
 
@@ -122,7 +111,7 @@ export default {
         case "nowPlaying":
           return this.nowPlaying;
         case "topRated":
-          return this.topLated;
+          return this.topRated;
         case "upComing":
           return this.upComing;
         case "dayTrend":
@@ -133,18 +122,6 @@ export default {
           return this.nowPlaying;
       }
     },
-
-    filteredMovies() {
-      if (this.selectedGenreIds.length === 0) return [];
-
-      return this.currentMovieData.filter((movie) => {
-        if (!movie.genre_ids) return false;
-        // 선택된 모든 장르를 포함하는 영화만 필터링
-        return this.selectedGenreIds.every((genreId) =>
-          movie.genre_ids.includes(genreId)
-        );
-      });
-    },
   },
 
   methods: {
@@ -152,21 +129,43 @@ export default {
       this.currentTab = tabId;
     },
 
-    updateSelectedGenres(newGenres) {
-      this.selectedGenreIds = newGenres;
+    async fetchCollections() {
+      try {
+        const collectionsData = await Promise.all(
+          this.collectionIds.map((id) => getCollection(id))
+        );
+
+        // 해리포터 컬렉션에 한글 overview 추가
+        this.collections = collectionsData.map((collection) => {
+          if (collection.id === 1241) {
+            // 해리포터 컬렉션 ID
+            return {
+              ...collection,
+              overview:
+                "해리 포터 시리즈는 J.K. 롤링의 판타지 소설을 원작으로 한 영화 시리즈입니다. 호그와트 마법학교를 배경으로 마법사 소년 해리 포터와 그의 친구들이 어둠의 마법사 볼드모트와 맞서 싸우는 이야기를 그렸습니다. 마법의 세계를 배경으로 한 모험, 우정, 사랑, 그리고 성장을 담은 이 시리즈는 전 세계적으로 큰 사랑을 받았습니다.",
+            };
+          } else if (collection.id === 119) {
+            return {
+              ...collection,
+              overview:
+                "반지의 제왕 3부작은 J. R. R. 톨킨의 영향력 있는 소설을 원작으로 한 서사적인 판타지 영화들로, 피터 잭슨 감독이 연출을 맡았다.",
+            };
+          } else if (collection.id === 87359) {
+            return {
+              ...collection,
+              overview:
+                "미션 임파서블은 1966년부터 1973년까지 방영된 인기 TV 시리즈를 바탕으로 한 첩보 액션 영화 시리즈이다. 이 시리즈는 이단 헌트 요원을 중심으로 한 IMF(불가능한 임무 부대) 팀의 작전을 그리고 있다.",
+            };
+          }
+          return collection;
+        });
+      } catch (error) {
+        console.error("Error fetching collections:", error);
+      }
     },
 
-    getFilteredTitle() {
-      return this.selectedGenreIds.map((id) => this.genreMap[id]).join(" + ");
-    },
-
-    formatDate(dateString) {
-      if (!dateString) return "";
-      return dateString.replace(/-/g, ".");
-    },
-
-    moveDetail(movieId) {
-      this.$router.push(`/movie/${movieId}`);
+    goToCollectionDetail(collectionId) {
+      this.$router.push(`/collection/${collectionId}`);
     },
   },
 
@@ -183,11 +182,14 @@ export default {
         ]);
 
       this.nowPlaying = nowPlaying;
-      this.topLated = topRated;
+      this.topRated = topRated;
       this.upComing = upComing;
       this.dayTrend = dayTrend;
       this.weekTrend = weekTrend;
       this.genreMap = genres;
+
+      // 컬렉션 데이터 가져오기
+      await this.fetchCollections();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -196,121 +198,68 @@ export default {
 </script>
 
 <style scoped>
-.content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+.collection-section {
+  padding: 2rem;
 }
 
-.genre-sections {
-  margin-top: 40px;
+.collection-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
 }
 
-.filtered-movies {
-  margin-top: 20px;
-}
-
-.filtered-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.movie-grid {
+.collection-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
-.movie-card {
-  cursor: pointer;
-  transition: transform 0.3s ease;
+.collection-card {
+  background: #fff;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
-.movie-card:hover {
+.collection-card:hover {
   transform: translateY(-5px);
 }
 
-.poster-wrap {
-  position: relative;
+.collection-poster {
   width: 100%;
-  padding-top: 150%;
+  height: 200px;
+  overflow: hidden;
 }
 
-.movie-poster {
-  position: absolute;
-  top: 0;
-  left: 0;
+.collection-poster img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.movie-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 15px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  color: white;
+.collection-info {
+  padding: 1.5rem;
 }
 
-.movie-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  white-space: nowrap;
+.collection-info h3 {
+  font-size: 1.4rem;
+  color: black;
+  margin-bottom: 0.5rem;
+}
+
+.movie-count {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.collection-overview {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #444;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.movie-genres {
-  margin-bottom: 8px;
-}
-
-.movie-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-}
-
-.release-date {
-  color: #ccc;
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.rating-value {
-  font-weight: bold;
-}
-
-.rating-icon {
-  color: #ffd700;
-}
-
-:deep(.movie-genre) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-:deep(.movie-genre li) {
-  font-size: 12px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.2);
 }
 </style>

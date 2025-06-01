@@ -85,6 +85,16 @@ export const getWeekTrending = async () => {
     throw error;
   }
 };
+// 컬렉션
+export const getCollection = async (collectionId) => {
+  try {
+    const response = await tmdbApi.get(`/collection/${collectionId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching collection:", error);
+    throw error;
+  }
+};
 
 // 특정 영화 상세 정보 가져오기
 export const getMovieDetails = async (movieId) => {
@@ -165,6 +175,80 @@ export const getMovieGenres = async () => {
     }, {});
   } catch (error) {
     console.error("Error fetching movie genres:", error);
+    throw error;
+  }
+};
+
+// 영화 검색
+export const searchMovies = async (query) => {
+  try {
+    const response = await tmdbApi.get("/search/movie", {
+      params: {
+        query,
+        language: "ko-KR",
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error("Error searching movies:", error);
+    throw error;
+  }
+};
+
+// 인물 검색
+export const searchPeople = async (query) => {
+  try {
+    const response = await tmdbApi.get("/search/person", {
+      params: { query },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error("Error searching people:", error);
+    throw error;
+  }
+};
+
+// 컬렉션 검색
+export const searchCollections = async (query) => {
+  try {
+    const response = await tmdbApi.get("/search/collection", {
+      params: {
+        query: query,
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error("Error searching collections:", error);
+    throw error;
+  }
+};
+
+// 키워드 검색
+export const searchKeywords = async (query) => {
+  try {
+    const response = await tmdbApi.get("/search/keyword", {
+      params: { query },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error("Error searching keywords:", error);
+    throw error;
+  }
+};
+
+// 영화 검색 (discover)
+export const discoverMovies = async (params) => {
+  try {
+    const response = await tmdbApi.get("/discover/movie", {
+      params: {
+        ...params,
+        language: "ko-KR",
+        sort_by: params.sort_by || "popularity.desc",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error discovering movies:", error);
     throw error;
   }
 };

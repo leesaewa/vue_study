@@ -7,7 +7,7 @@
       </ul>
     </nav>
 
-    <div class="search">search</div>
+    <div class="search"><router-link to="/search">search</router-link></div>
   </header>
 </template>
 
